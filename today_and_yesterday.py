@@ -1,6 +1,7 @@
 #-*-coding:utf-8-*-
 import os
 import re
+import zipfile
 import datetime
 today = datetime.date.today().strftime('%Y%m%d')
 yesterday = (datetime.date.today()-datetime.timedelta(days=1)).strftime('%Y%m%d')
@@ -85,3 +86,28 @@ except:
     xunjian_differents.write('可能是昨天的 %s巡检.log 不存在'%yesterday)
 #close open file
 xunjian_differents.close()
+#start to zip files
+try:
+    compression = zipfile.ZIP_DEFLATED
+except:
+    compression = zipfile.ZIP_STORED
+zip_file = zipfile.ZipFile('C:\\Users\\Administrator\\Desktop\\巡检\\%s巡检.zip'%today, 'w' ,compression = compression)
+try:
+    zip_file.write('C:\\Users\\Administrator\\Desktop\\巡检\\%s巡检.log'%today,'%s巡检.log'%today)
+    zip_file.write('C:\\Users\\Administrator\\Desktop\\巡检\\%s巡检比较.log'%today,'%s巡检比较.log'%today)
+    zip_file.write('C:\\Users\\Administrator\\Desktop\\巡检\\%s运行服务.log'%today,'%s运行服务.log'%today)
+    zip_file.write('C:\\Users\\Administrator\\Desktop\\巡检\\%s运行服务比较.log'%today,'%s运行服务比较.log'%today)
+except:
+    error_file = open('C:\\Users\\Administrator\\Desktop\\巡检\\%s巡检或运行服务文件未创建成功.error'%today,'w')
+    error_file.close()
+    zip_file.write('C:\\Users\\Administrator\\Desktop\\巡检\\%s巡检或运行服务文件未创建成功.error'%today,'%s巡检或运行服务文件未创建成功.error'%today)
+try:
+    zip_file.write('C:\\Users\\Administrator\\Desktop\\巡检\\%s巡检.log'%yesterday,'%s巡检.log'%yesterday)
+    zip_file.write('C:\\Users\\Administrator\\Desktop\\巡检\\%s运行服务.log'%yesterday,'%s运行服务.log'%yesterday)
+except:
+    error_file = open('C:\\Users\\Administrator\\Desktop\\巡检\\%s巡检或运行服务文件不存在.error'%yesterday,'w')
+    error_file.close()
+    zip_file.write('C:\\Users\\Administrator\\Desktop\\巡检\\%s巡检或运行服务文件不存在.error'%yesterday,'%s巡检或运行服务文件不存在.error'%yesterday)
+#close zip_file
+zip_file.close()
+    
