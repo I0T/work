@@ -2,6 +2,11 @@
 import os
 import re
 import zipfile
+import smtplib
+from email.MIMEText import MIMEText
+from email.MIMEMultipart import MIMEMultipart
+from email.MIMEBase import MIMEBase
+from email import Encoders
 import datetime
 today = datetime.date.today().strftime('%Y%m%d')
 yesterday = (datetime.date.today()-datetime.timedelta(days=1)).strftime('%Y%m%d')
@@ -117,3 +122,46 @@ zip_file.close()
 os.remove('C:\\Users\\Administrator\\Desktop\\巡检\\%s巡检比较.log'%today)
 os.remove('C:\\Users\\Administrator\\Desktop\\巡检\\%s运行服务比较.log'%today)
 #start to send email
+
+#email seting
+mail_to = ['收件箱1','收件箱2']
+mail_from = '发件邮箱'
+email_login_user = '登录账号'
+email_login_pass = '客户端授权密码'
+mail_body = '%s'%today
+subject = '%s巡检.zip'%today
+msg=MIMEMultipart()
+body=MIMEText(mail_body)
+msg.attach(body)
+part = MIMEBase('application', 'octet-stream')
+part.set_payload(open('C:\\Users\\Administrator\\Desktop\\巡检\\%s巡检.zip'%today,'rb').read())
+Encoders.encode_base64(part)
+part.add_header('Content-Disposition', 'attachment', filename="%s巡检.zip"%today)
+msg.attach(part)
+msg['Subject']='这是%s的巡检文件'%today
+msg['From']=mail_from
+msg['To']=';'.join(mail_to)
+#send emails three times
+try:
+    smtp=smtplib.SMTP()
+    smtp.connect('smtp.163.com')
+    smtp.login(email_login_user,email_login_pass)
+    smtp.sendmail(mail_from,mail_to,msg.as_string())
+    smtp.quit()
+except:
+    try:
+        smtp=smtplib.SMTP()
+        smtp.connect('smtp.163.com')
+        smtp.login(email_login_user,email_login_pass)
+        smtp.sendmail(mail_from,mail_to,msg.as_string())
+        smtp.quit()
+    except:
+        try:
+            smtp=smtplib.SMTP()
+            smtp.connect('smtp.163.com')
+            smtp.login(email_login_user,email_login_pass)
+            smtp.sendmail(mail_from,mail_to,msg.as_string())
+            smtp.quit()
+        except:
+            print '发送邮件失败'
+	          input('回车退出')
