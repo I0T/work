@@ -101,13 +101,19 @@ except:
     error_file = open('C:\\Users\\Administrator\\Desktop\\巡检\\%s巡检或运行服务文件未创建成功.error'%today,'w')
     error_file.close()
     zip_file.write('C:\\Users\\Administrator\\Desktop\\巡检\\%s巡检或运行服务文件未创建成功.error'%today,'%s巡检或运行服务文件未创建成功.error'%today)
+#while zip yesterday's files,delete them 
 try:
     zip_file.write('C:\\Users\\Administrator\\Desktop\\巡检\\%s巡检.log'%yesterday,'%s巡检.log'%yesterday)
+    os.remove('C:\\Users\\Administrator\\Desktop\\巡检\\%s巡检.log'%yesterday)
     zip_file.write('C:\\Users\\Administrator\\Desktop\\巡检\\%s运行服务.log'%yesterday,'%s运行服务.log'%yesterday)
+    os.remove('C:\\Users\\Administrator\\Desktop\\巡检\\%s运行服务.log'%yesterday)
 except:
     error_file = open('C:\\Users\\Administrator\\Desktop\\巡检\\%s巡检或运行服务文件不存在.error'%yesterday,'w')
     error_file.close()
     zip_file.write('C:\\Users\\Administrator\\Desktop\\巡检\\%s巡检或运行服务文件不存在.error'%yesterday,'%s巡检或运行服务文件不存在.error'%yesterday)
 #close zip_file
 zip_file.close()
-    
+#start to delete files not needed
+os.remove('C:\\Users\\Administrator\\Desktop\\巡检\\%s巡检比较.log'%today)
+os.remove('C:\\Users\\Administrator\\Desktop\\巡检\\%s运行服务比较.log'%today)
+#start to send email
