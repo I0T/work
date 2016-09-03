@@ -19,7 +19,7 @@ share = os.popen('net share').read()
 ports = os.popen('netstat -ano|findstr 0.0.0.0 ').read()
 #write datas to xunjian.log
 xunjian_out.writelines('－－－－－－－－－－－－－－－－主机检查开始－－－－－－－－－－－－－－－－ \n'
-                  '_______________________________________________________________________________\n'
+                  '_______________________________________________________________________________ \n'
                   '主机名 \n%s'
                   '_______________________________________________________________________________ \n'
                   'IP地址和子网掩码 \n%s'
@@ -63,4 +63,25 @@ try:
         for service_old in services_old:
             services_differents.write('%s\n'%service_old)
 except:
-    print '可能是昨天的 运行服务.log 不存在'
+    services_differents.write('可能是昨天的 %s运行服务.log 不存在'%yesterday)
+#close open files
+services_differents.close()
+#differents with xunjian.log
+xunjian_differents = open('C:\\Users\\Administrator\\Desktop\\巡检\\%s巡检比较.log'%today,'w')
+try:
+    xunjian_today = open('C:\\Users\\Administrator\\Desktop\\巡检\\%s巡检.log'%today,'r').read()
+    xunjian_yesterday = open('C:\\Users\\Administrator\\Desktop\\巡检\\%s巡检.log'%yesterday,'r').read()
+    xunjians_today = xunjian_today.split('_______________________________________________________________________________ \n')
+    xunjians_yesterday = xunjian_yesterday.split('_______________________________________________________________________________ \n')
+    if xunjians_today != xunjians_yesterday:
+        xunjian_differents.write('巡检.log发生了变化\n')
+        for num in range(1,7):
+            if xunjians_today[num] !=xunjians_yesterday[num]:
+                xunjian_differents.write('--------------------今天的内容--------------------\n'
+                                         '%s\n'
+                                         '--------------------昨天的内容--------------------\n%s\n'
+                                         %(xunjians_today[num],xunjians_yesterday[num]))
+except:
+    xunjian_differents.write('可能是昨天的 %s巡检.log 不存在'%yesterday)
+#close open file
+xunjian_differents.close()
